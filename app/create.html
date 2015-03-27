@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Partida Creada</title>
+</head>
+<body>
+    <script src="../js/network.js"></script>
+   <script>
+        var message= {
+            cod : 101,
+            message : "Hello world"
+        };
+        network.serverUDP(message,10022);
+   </script>
+
+</body>
+</html>

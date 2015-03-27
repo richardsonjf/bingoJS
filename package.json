@@ -1,0 +1,10 @@
+{
+  "name": "BingoJS",
+  "single-instance" : false,
+  "window": {
+    "width": 1100,
+    "height": 650,
+    "toolbar": true
+    },
+  "main": "/app/index.html"
+}
