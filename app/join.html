@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!--should be added bootstrap local -->
+    <link rel="stylesheet" href="../css/roboto.min.css">
+    <link rel="stylesheet" href="../css/material-fullpalette.min.css">
+    <link rel="stylesheet" href="../css/ripples.min.css">
+    <script src="../js/vendor/jquery-1.11.2.min.js"></script>
+    <script src="../js/vendor/underscore.min.js"></script>
+    <script src="../js/vendor/material.min.js"></script>
+    <link rel="stylesheet" href="../css/main.css">
+    <title>Unirse</title>
+</head>
+<body>
+    <div class="pro"></div>
+    <div class="col-md-12 col-offset-1" style="margin-top:2em;">
+        <div class="well bs-component">
+            <h1 style="text-align:center;">Salas Disponibles</h1>
+            <div class="row" style="border-bottom: 2px solid rgba(0,0,0,0.2);">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4">
+                        <h3>Sala</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>IP</h3>
+                    </div>
+            </div>
+            <div class="row" id="rooms">
+
+            </div>
+            <div class="row">
+                <div class="special-button">
+                    <a href="" class="btn btn-primary btn-fab btn-raised">
+                        <i class="mdi-navigation-arrow-forward"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="../js/network.js"></script>
+
+
+    <script type="text/template" id="room-template">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="radio radio-primary">
+                    <label>
+                        <input type="radio" name="rooms"  value="<%= ip %>" checked="">
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h4><%= roomName %></h4>
+            </div>
+            <div class="col-md-6">
+                <h4><%= ip %></h4>
+            </div>
+        </div>
+    </script>
+    <script>
+        $.material.init();
+    </script>
+    <script src="../js/join.js"></script>
+
+</body>
+</html>

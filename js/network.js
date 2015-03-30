@@ -1,7 +1,5 @@
 var dgram = require('dgram');
 var network = {
-    udp: dgram.createSocket('udp4'),
-    tcp: require('net'),
 
     serverUDP : function(json,port){
         var dgram = require('dgram');
@@ -29,11 +27,11 @@ var network = {
             console.log("Server on listening:"+ HOST + ' Port:' + PORT);
         });
 
-        client.on('message',function(message,remote){
-            console.log('message receive: ' + message);
-        });
+
 
         client.bind(PORT,HOST);
+        return client;
     }
+
 
 };

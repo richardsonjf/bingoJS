@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!--should be added bootstrap local -->
+    <link rel="stylesheet" href="../css/roboto.min.css">
+    <link rel="stylesheet" href="../css/material-fullpalette.min.css">
+    <link rel="stylesheet" href="../css/ripples.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../js/vendor/jquery-1.11.2.min.js"></script>
+    <script src="../js/vendor/underscore.min.js"></script>
+    <script src="../js/vendor/material.min.js"></script>
+
+    <title>Partida Creada</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <h1>Sala : </h1>
+            </div>
+        </nav>
+    </header>
+
+    <div class="row">
+        <div class="col-md-7 left-2">
+            <div class="well bs-component">
+                <h3> Jugadores</h3>
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Nombre</th>
+                                <th>Direccion IP</th>
+                                <th># Cartones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td>Luis</td>
+                                <td>127.0.0.1</td>
+                                <td>5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+               <div class="well bs-component">
+                   <h3>Numeros Cantados</h3>
+                   <div class="col-md-12">
+                       <span>1</span>
+                   </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="well bs-component" id="information">
+                   <h3>Informacion de Juego</h3>
+               </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="../js/network.js"></script>
+    <script src="../js/server.js"></script>
+
+    <script type="text/template" id="info-template">
+
+        <div class="alert alert-dismissable <%= type %>" id="nameError" >
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong> <%= message %> </strong> <span><%= description %></span>
+        </div>
+
+    </script>
+
+    <script type="text/template" id="player-template">
+        <tr>
+            <td></td>
+            <td> <%= playerName %> </td>
+            <td><%= ip %></td>
+            <td>0</td>
+        </tr>
+
+    </script>
+
+    <script>
+        $.material.init();
+   </script>
+</body>
+</html>

@@ -2,16 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Partida Creada</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!--should be added bootstrap local -->
+    <link rel="stylesheet" href="../css/roboto.min.css">
+    <link rel="stylesheet" href="../css/material-fullpalette.min.css">
+    <link rel="stylesheet" href="../css/ripples.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../js/vendor/jquery-1.11.2.min.js"></script>
+    <script src="../js/vendor/material.min.js"></script>
+    <title>Crear Partida</title>
 </head>
 <body>
+
+    <div class="row" id="createRoom">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="well bs-component">
+                <div class="alert alert-dismissable alert-danger hide" id="nameError" >
+                    <button type="button" class="close" data-dismiss="alert" id="closeNameError" >×</button>
+                    <strong>Ah Ocurrido un Error!</strong> <span>No es posible crear una sala si no se define un nombre.</span>
+                </div>
+                <form action="" class="form-horizontal">
+                    <fieldset>
+                        <legend> Crear Partida </legend>
+                        <div class="form-group">
+                            <label for="roomName" class="col-md-2 control-label">
+                                Nombre:
+                            </label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="roomName">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-5">
+                            <button id="createGame" type="submit" class="btn btn-primary">
+                                Crear
+                                <div class="ripple-wrapper"></div>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
     <script src="../js/network.js"></script>
+    <script src="../js/create.js"></script>
    <script>
-        var message= {
-            cod : 101,
-            message : "Hello world"
-        };
-        network.serverUDP(message,10022);
+        $.material.init();
    </script>
 
 </body>
