@@ -1,8 +1,9 @@
-var dgram = require('dgram');
-var network = {
 
+var network = {
+    net : require('net'),
+    dgram: require('dgram'),
     serverUDP : function(json,port){
-        var dgram = require('dgram');
+        var dgram = this.dgram;
         var PORT = port;
         var HOST = '255.255.255.255';
         var server = dgram.createSocket('udp4');
@@ -19,7 +20,7 @@ var network = {
     },
 
     clientUDP: function (port){
-        var dgram = require('dgram');
+        var dgram = this.dgram;
         var client = dgram.createSocket('udp4');
         var PORT = port;
         var HOST = '255.255.255.255';
@@ -31,6 +32,26 @@ var network = {
 
         client.bind(PORT,HOST);
         return client;
+    },
+
+    serverTCP : function (port){
+        var net = this.net;
+        var server = net.createServer(function( client ){
+            console.log('client connected');
+            client.on('end',function(){
+                console.log('client disconnected');
+            });
+        });
+        return server;
+    },
+
+    clientTCP : function(port,host){
+        var net = this.net;
+        var client = new net.Socket();
+
+        client.connect(port,host,function(){
+            console.log('connected to: ' + host + ' ' + port);
+        });
     }
 
 

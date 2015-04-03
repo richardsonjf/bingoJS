@@ -29,6 +29,15 @@ function announceRoom(ip , room){
     renderInfoMessage(data);
 }
 
+(function startServer(){
+    var server = network.serverTCP(10022);
+    console.log(server);
+    server.listen(10022,function(){
+        console.log('Server listening');
+    });
+
+}());
+
 function renderInfoMessage(data){
     $('#information').append(templates.infoMessage(data));
 }

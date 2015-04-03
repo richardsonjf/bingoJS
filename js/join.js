@@ -2,6 +2,8 @@ var clientUDP = network.clientUDP(10022);
 var template = _.template($('#room-template').html());
 var rooms = [];
 
+//need implement the client ip (userip)
+
 clientUDP.on('message',function(message,remote){
         console.log('message receive: ' + message + 'remote to: ' +remote.address);
         var packet =  JSON.parse(message);
@@ -25,10 +27,14 @@ clientUDP.on('message',function(message,remote){
 //Events
 $('.btn-primary').on('click',function(ev){
     ev.preventDefault();
-    var address = $("input[name='rooms']").val();
+    var element = $("input[name='rooms']:checked");
+    var address = element.val();
 
     if(typeof(address) != 'undefined'){
         global.infoGame.hostAddress = address;
+        global.infoGame.userName = $('#userName').val();
+        global.infoGame.roomName = element.attr('data-roomName');
+        clientUDP.close();
         window.location.href = '../app/clientGame.html';
     }else{
         console.log('No se ha seleccionado ninguna Sala');
@@ -37,11 +43,9 @@ $('.btn-primary').on('click',function(ev){
 
 });
 
-$('.col-md-12').mouseenter(function(){
+$('#userName').change(function(){
     $('.special-button').addClass('move-button');
 });
 
-$('.col-md-12').mouseleave(function(){
-    $('.special-button').removeClass('move-button');
-});
+
 

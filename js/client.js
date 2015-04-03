@@ -1,0 +1,1 @@
+network.clientTCP(10022,global.infoGame.hostAddress);

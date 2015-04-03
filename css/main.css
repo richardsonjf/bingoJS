@@ -5,6 +5,11 @@
   font-weight: normal;
   font-style: normal;
 }
+header h1 {
+  text-align: center;
+  color: #fff;
+  font-size: 3em;
+}
 body {
   overflow: hidden;
 }

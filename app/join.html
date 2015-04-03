@@ -15,8 +15,25 @@
     <title>Unirse</title>
 </head>
 <body>
+    <header>
+        <nav class="navbar navbar-default">
+            <h1>Unirse</h1>
+        </nav>
+    </header>
     <div class="pro"></div>
-    <div class="col-md-12 col-offset-1" style="margin-top:2em;">
+    <div class="col-md-4">
+        <div class="well bs-component">
+            <fieldset>
+                        <legend> Nombre de Usuario </legend>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" id="userName" placeholder="Leonel Messi">
+                            </div>
+                        </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="col-md-8 col-offset-1">
         <div class="well bs-component">
             <h1 style="text-align:center;">Salas Disponibles</h1>
             <div class="row" style="border-bottom: 2px solid rgba(0,0,0,0.2);">
@@ -43,7 +60,7 @@
 
     </div>
 
-    <script src="../js/network.js"></script>
+
 
 
     <script type="text/template" id="room-template">
@@ -51,7 +68,7 @@
             <div class="col-md-2">
                 <div class="radio radio-primary">
                     <label>
-                        <input type="radio" name="rooms"  value="<%= ip %>" checked="">
+                        <input type="radio" name="rooms"  value="<%= ip %>" checked="" data-roomName="<%= roomName %>">
                     </label>
                 </div>
             </div>
@@ -66,6 +83,8 @@
     <script>
         $.material.init();
     </script>
+
+    <script src="../js/network.js"></script>
     <script src="../js/join.js"></script>
 
 </body>
