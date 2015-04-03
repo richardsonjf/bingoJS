@@ -34,17 +34,6 @@ var network = {
         return client;
     },
 
-    serverTCP : function (port){
-        var net = this.net;
-        var server = net.createServer(function( client ){
-            console.log('client connected');
-            client.on('end',function(){
-                console.log('client disconnected');
-            });
-        });
-        return server;
-    },
-
     clientTCP : function(port,host){
         var net = this.net;
         var client = new net.Socket();
@@ -52,6 +41,7 @@ var network = {
         client.connect(port,host,function(){
             console.log('connected to: ' + host + ' ' + port);
         });
+        return client;
     }
 
 
