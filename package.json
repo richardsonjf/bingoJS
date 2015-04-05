@@ -3,7 +3,7 @@
   "single-instance" : false,
   "window": {
     "width": 1100,
-    "height": 650,
+    "height": 700,
     "toolbar": true
     },
   "main": "/app/index.html"

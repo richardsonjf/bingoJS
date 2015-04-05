@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <script src="../js/vendor/jquery-1.11.2.min.js"></script>
     <script src="../js/vendor/underscore.min.js"></script>
+    <script src="../js/vendor/ripples.min.js"></script>
     <script src="../js/vendor/material.min.js"></script>
 
     <title>Partida Creada</title>
@@ -55,8 +56,13 @@
             <div class="row">
                <div class="well bs-component">
                    <h3>Numeros Cantados</h3>
-                   <div class="col-md-12">
-                       <span>1</span>
+                   <div class="row">
+                       <div class="col-md-12">
+                            <a href="" class="btn btn-sup btn-primary btn-raised bold">
+                                <strong>Cantar Numeros</strong>
+                            </a>
+                            <span class="badge label-danger">1</span>
+                       </div>
                    </div>
                </div>
             </div>
@@ -69,8 +75,7 @@
         </div>
     </div>
 
-    <script src="../js/network.js"></script>
-    <script src="../js/server.js"></script>
+    <!-- Templates -->
 
     <script type="text/template" id="info-template">
 
@@ -86,13 +91,17 @@
             <td></td>
             <td> <%= playerName %> </td>
             <td><%= ip %></td>
-            <td>0</td>
+            <td id="<%= md5ip %>">0</td>
         </tr>
 
     </script>
 
+    <!-- scripts -->
+
     <script>
         $.material.init();
    </script>
+    <script src="../js/network.js"></script>
+    <script src="../js/server.js"></script>
 </body>
 </html>

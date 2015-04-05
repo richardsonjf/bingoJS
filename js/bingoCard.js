@@ -2,8 +2,8 @@ var _ = require('underscore');
 var MD5 = require('MD5');
 module.exports = {
     generateBingoCard : function(){
-        console.log('Generando bingo');
-        card = new Array();
+
+        card = [];
 
         card.push(this.generateBingoLetter('B'));
         card.push(this.generateBingoLetter('I'));
@@ -21,7 +21,7 @@ module.exports = {
     generateBingoLetter :function(letter){
         var max,min;
         var number;
-        var row = new Array();
+        var row = [];
 
         switch(letter){
             case 'B':

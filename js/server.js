@@ -1,11 +1,10 @@
-$(document).on('ready',function(){
-
 var MD5 = require('MD5');
 var bingoCard = require('../js/bingoCard.js');
 
 var ip = global.infoGame.ip;
 var roomName = global.infoGame.roomName;
 var gameID = global.infoGame.gameID = MD5(ip);
+var users = new Array();
 
 var templates = {
     infoMessage : _.template($('#info-template').html()),
@@ -50,14 +49,8 @@ function announceRoom(ip , room){
 
     });
 
-    console.log(server);
-
     server.listen(10022,function(){
         console.log('Server listening');
-    });
-
-    server.on('data',function(data){
-        console.log(data.toString());
     });
 
     function handleData( data , sock ) {
@@ -67,6 +60,7 @@ function announceRoom(ip , room){
                 responseConnection(data, sock);
                 break;
             case 102:
+                responseRequestCards(data,sock);
                 break;
             default:
                 console.log('Codigo erroneo de JSON');
@@ -74,10 +68,33 @@ function announceRoom(ip , room){
         }
     }
 
-    function responseConnection( json ,sock ){
+    function responseRequestCards(json, sock){
+        var user = _.find(users,function(){
+                        return users.ip === json.localAddress;
+                    });
+        for (var i = 0; i < json.NROCARTONES; i++) {
+            var card = bingoCard.generateBingoCard();
+            data ={
+                COD: 103,
+                IDCARTON : card.cardID,
+                NUMEROS : card.card
+            };
+            sleep(100);
+
+            sock.write(JSON.stringify(data));
+            user.cardsID.push(card.cardID);
+        }
+
+        console.log(user);
+        renderPlayerCardQuantity(MD5(user.ip),json.NROCARTONES);
+    }
+
+    function responseConnection( json, sock ){
+
         data = {
             playerName : json.CLIENTE,
-            ip : sock.localAddress
+            ip : sock.localAddress,
+            md5ip: MD5(sock.localAddress)
         };
 
         console.log(sock.remoteAddress);
@@ -89,6 +106,12 @@ function announceRoom(ip , room){
         };
 
         sock.write(JSON.stringify(response));
+        users.push({
+            playerName: json.CLIENTE,
+            ip: sock.localAddress,
+            cardsID : []
+        });
+
     }
 
     function parseJSON( json ){
@@ -104,12 +127,31 @@ function announceRoom(ip , room){
 
 }());
 
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+function getIpFormat(ip){
+    var parts = ip.split('f:');
+    return parts[1];
+}
+
 function renderInfoMessage(data){
     $('#information').append(templates.infoMessage(data));
 }
 
 function renderPlayer(data){
     $('#players').append(templates.player(data));
+}
+
+function renderPlayerCardQuantity(md5PlayerIP, cardQuantity){
+    console.log('rendered md5: ' + md5PlayerIP + '  '+ cardQuantity);
+    console.log($('#'+md5PlayerIP).text(cardQuantity));
 }
 
 
@@ -121,6 +163,4 @@ $('title').text('Partida Creada - Sala:' + roomName);
 
 $('.close').on('click',function(){
     $(this).parent().remove();
-});
-
 });

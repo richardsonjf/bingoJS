@@ -12,107 +12,126 @@ blueligth = #0F9982;
     font-weight: normal;
     font-style: normal;
 }
+
 header
     h1
         text-align: center;
         color: white;
         font-size: 3em;
-body{
-    overflow: hidden;
-}
 
-.secondary-title{
+body
+    overflow: hidden;
+
+
+.secondary-title
     margin-top:  2em;
-}
-.main-header{
+
+.main-header
     background: teal7;
     margin: 0;
     padding: 0;
-    h1{
+    h1
         margin: 0;
         padding: 1em;
         color: white;
-    }
-}
 
-.main-options{
-    h2{
+
+
+.main-options
+    h2
         color: teal9;
         text-align: center;
-    }
 
-    .options{
+
+    .options
         margin-left: 17%;
         margin-top: 3.5em;
-        li{
+        li
             list-style: none;
             display: inline-block;
             background:teal9;
             padding: 2em;
             margin-left: 2em;
             border-radius: 10px;
-            a{
+            a
                 text-decoration: none;
                 display: block;
-                &:before{
+                &:before
                     font-family:"icomoon";
                     color: white;
                     font-size: 7em;
                     padding: 0.5em;
-                }
-                &:hover{
-                    &:before{
-                        color: blueligth;
-                    }
-                }
-            }
 
-            span{
+                &:hover
+                    &:before
+                        color: blueligth;
+
+
+
+
+            span
                 display: block;
                 color: white;
                 font-size: 1.5em;
                 margin-bottom: 1.5em;
                 text-align: center;
-            }
-        }
-    }
-}
-.font-xlarge{
-    font-size: 3em;
-}
 
-.navbar-header{
+
+
+
+.bingoCard
+    .well
+        padding: 0;
+        .table
+            width: 100.4%;
+            max-width: 100.4%;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            thead
+                tr
+                    border : 1px solid #f44336;
+                    td
+                        border : 1px solid #f44336;
+
+            tbody
+                color: gray;
+
+.font-xlarge
+    font-size: 3em;
+
+
+.navbar-header
     float: none;
     padding: 1.5em 0;
-}
 
-.left-2{
+
+.left-2
     margin: 0;
     margin-left: 2%;
-}
-.hide{
+
+.hide
     display: none;
-}
 
-.icon-dice:before {
+
+.icon-dice:before
     content: "\e915";
-}
 
-.icon-pacman:before {
+
+.icon-pacman:before
     content: "\e916";
-}
 
-.icon-database:before {
+
+.icon-database:before
     content: "\e964";
-}
-.special-button{
-        position: relative;
-        left: 50%;
-        bottom: -50px;
-        visibility: hidden;
-}
-.move-button{
+
+.special-button
+    position: relative;
+    left: 50%;
+    bottom: -50px;
+    visibility: hidden;
+
+.move-button
     transition: all 1s ease;
     left: 85%;
     visibility: visible;
-}
