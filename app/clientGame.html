@@ -45,8 +45,8 @@
             <div class="well bs-component">
                 <h3>Numeros Cantados</h3>
                 <div class="row">
-                    <div class="col-md-12">
-                        <span class="badge btn-success">3</span>
+                    <div class="col-md-12" id="numbers">
+
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                             <td>O</td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id='<%= cardID %>'>
                         <% for (var i = 0; i < 5; i++) { %>
                            <tr>
                                 <% for(var j = 0; j < 5; j++){ %>

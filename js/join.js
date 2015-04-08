@@ -6,12 +6,18 @@ var rooms = [];
 
 clientUDP.on('message',function(message,remote){
         console.log('message receive: ' + message + 'remote to: ' +remote.address);
-        var packet =  JSON.parse(message);
+        var packet;
+
+        try{
+             packet =  JSON.parse(message);
+        }catch(er){
+            console.log(er);
+        }
 
         if(packet.COD == 105){
             data = {
                 roomName : packet.SALA,
-                ip : packet.IP
+                ip : remote.address
             };
 
             if(!_.contains(rooms,data.ip)){

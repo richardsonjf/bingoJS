@@ -1,10 +1,7 @@
-var os = require('os');
-
-netInterfaces = os.networkInterfaces();
-var ip = netInterfaces.wlan0[0].address;
-console.log(ip);
-
+var ip = network.getMyIp();
 var roomName;
+
+console.log(ip);
 
 $('#createGame').on('click',function( ev ){
     ev.preventDefault();

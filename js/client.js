@@ -1,15 +1,14 @@
 var os = require('os');
-var bingo = require('../js/bingoCard.js');
+
 var netInterfaces = os.networkInterfaces();
-var ip = netInterfaces.wlan0[0].address;
-var client = network.clientTCP(10022,global.infoGame.hostAddress);
+var ip = network.getMyIp();
+var port = global.infoGame.PORT;
+var client = network.clientTCP(port,global.infoGame.hostAddress);
 var myCards = [];
-var card = bingo.generateBingoCard();
 var templates = {
     card : _.template($('#card-template').html())
 };
 
-global.infoGame.ip = ip;
 
 requestConnection();
 
@@ -38,6 +37,9 @@ function handleData(data){
             console.log(data.NUMEROS);
             handleCards(data);
             break;
+        case 308:
+            handleNumbers(data);
+            break;
         default:
             console.log('switch:' +data);
             break;
@@ -47,13 +49,18 @@ function handleCards(json){
     var key = 'COD';
     delete data[key];
     myCards.push(data);
-    renderCard(json.NUMEROS);
+    renderCard(json);
 
 }
 
 function handleGameID(data){
     global.infoGame.gameID = data.IDJUEGO;
     console.log('Se ha unido al juego con id: ' + data.IDJUEGO);
+    hearmulticast(5554);
+}
+
+function handleNumbers(data){
+    $('#numbers').append('<span class="badge btn-success">'+ data.NUMERO +'</span>');
 }
 
 function parseJSON(json){
@@ -65,11 +72,30 @@ function parseJSON(json){
     }
 }
 
-function renderCard(card){
+function renderCard(json){
     data= {
-        card : card
+        cardID : json.IDCARTON,
+        card : json.NUMEROS
     };
     $('#cards-container').prepend(templates.card(data));
+}
+
+function hearmulticast(multicastPort){
+    var dgram = require('dgram');
+    var socket = dgram.createSocket('udp4');
+    var PORT = multicastPort;
+    socket.bind(PORT,'0.0.0.0',function(){
+        socket.setBroadcast(true);
+        socket.setTTL(1);
+        socket.addMembership('239.1.2.3');
+    });
+
+    socket.on('message',function(data,rinfo){
+
+       console.log(data.toString());
+       var message = parseJSON(data);
+       handleData(message);
+    });
 }
 
 //Events

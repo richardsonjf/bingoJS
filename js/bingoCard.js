@@ -42,7 +42,7 @@ module.exports = {
                 break;
             case 'O':
                 min = 61;
-                max = 75;
+                max = 76;
                 break;
         }
 

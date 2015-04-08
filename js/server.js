@@ -2,10 +2,14 @@ var MD5 = require('MD5');
 var bingoCard = require('../js/bingoCard.js');
 
 var ip = global.infoGame.ip;
+var port = global.infoGame.PORT;
 var roomName = global.infoGame.roomName;
 var gameID = global.infoGame.gameID = MD5(ip);
-var users = new Array();
-
+var users = [];
+var bingoNumbers = [];
+var intervalToAnnounce;
+var intervalMulticast;
+var sendMulticast;
 var templates = {
     infoMessage : _.template($('#info-template').html()),
     player : _.template($('#player-template').html())
@@ -20,14 +24,14 @@ function announceRoom(ip , room){
         'SALA': room
     };
 
-    setInterval(function(){
-                network.serverUDP(message,10022);
+    intervalToAnnounce = setInterval(function(){
+                network.serverUDP(message,port);
     }, 5000);
 
      var data = {
         type: 'alert-success',
         message: 'El servidor se esta Anunciando.',
-        description: 'En el puerto: 10022'
+        description: 'En el puerto: ' + port
     };
     renderInfoMessage(data);
 }
@@ -49,7 +53,7 @@ function announceRoom(ip , room){
 
     });
 
-    server.listen(10022,function(){
+    server.listen(port,function(){
         console.log('Server listening');
     });
 
@@ -93,7 +97,7 @@ function announceRoom(ip , room){
 
         data = {
             playerName : json.CLIENTE,
-            ip : sock.localAddress,
+            ip : getIpFormat(sock.localAddress),
             md5ip: MD5(sock.localAddress)
         };
 
@@ -127,6 +131,39 @@ function announceRoom(ip , room){
 
 }());
 
+function callNumber(){
+
+    intervalMulticast = setInterval(function(){
+
+
+        data = {
+            COD : 308,
+            IDJUEGO : gameID,
+            NROJUGADA : bingoNumbers.length + 1,
+            NUMERO : generateUniqueNumber()
+
+        };
+        //Finalize Game
+        if(bingoNumbers.length === 75)
+            clearInterval(intervalMulticast);
+
+        sendMulticast(data);
+        renderNumberCalled(data.NUMERO);
+    }, 1000);
+}
+
+function generateUniqueNumber(){
+    var number;
+    do{
+
+        number = bingoCard.generateRandomInt(1,76);
+
+    }while(_.contains(bingoNumbers,number));
+
+    bingoNumbers.push(number);
+    return number;
+}
+
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
@@ -153,10 +190,24 @@ function renderPlayerCardQuantity(md5PlayerIP, cardQuantity){
     console.log('rendered md5: ' + md5PlayerIP + '  '+ cardQuantity);
     console.log($('#'+md5PlayerIP).text(cardQuantity));
 }
+function renderNumberCalled(number){
+    $('#numbersCalled').append('<span class="badge label-danger">'+ number +'</span>');
+}
 
 
 
 //Events
+$('#startGame').on('click',function(ev){
+    ev.preventDefault();
+    console.log('Empezar juego');
+    sendMulticast = network.multicast(5554);
+    clearInterval(intervalToAnnounce);
+    sendMulticast({COD:300, IDJUEGO:gameID});
+    ev.currentTarget.remove();
+    callNumber();
+
+
+});
 
 $('h1').text('Sala:' + roomName);
 $('title').text('Partida Creada - Sala:' + roomName);
