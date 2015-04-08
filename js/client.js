@@ -61,6 +61,7 @@ function handleGameID(data){
 
 function handleNumbers(data){
     $('#numbers').append('<span class="badge btn-success">'+ data.NUMERO +'</span>');
+    renderHitForAllCards(data.NUMERO);
 }
 
 function parseJSON(json){
@@ -72,12 +73,16 @@ function parseJSON(json){
     }
 }
 
-function renderCard(json){
-    data= {
-        cardID : json.IDCARTON,
-        card : json.NUMEROS
-    };
-    $('#cards-container').prepend(templates.card(data));
+function checkHit(card, number){
+
+    for (var i = 0; i < 5 ; i++) {
+        for (var j = 0; j < 5 ; j++) {
+            if(card.NUMEROS[i][j] === number)
+                return card.IDCARTON;
+        }
+    }
+
+    return '';
 }
 
 function hearmulticast(multicastPort){
@@ -92,10 +97,32 @@ function hearmulticast(multicastPort){
 
     socket.on('message',function(data,rinfo){
 
-       console.log(data.toString());
+       //console.log(data.toString());
        var message = parseJSON(data);
        handleData(message);
     });
+}
+
+function renderCard(json){
+    data= {
+        cardID : json.IDCARTON,
+        card : json.NUMEROS
+    };
+    $('#cards-container').prepend(templates.card(data));
+}
+
+function renderHitForAllCards(number){
+
+    for(var i = 0 ; i < myCards.length ; i++ ){
+        var cardID = checkHit(myCards[i],number);
+        console.log(cardID);
+        renderHit(cardID,number);
+    }
+
+}
+
+function renderHit(cardID, number){
+    $('#' + cardID).find('#' + number).addClass('success');
 }
 
 //Events
