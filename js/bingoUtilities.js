@@ -102,5 +102,12 @@ module.exports = {
             return true;
 
         return false;
+    },
+    getHits : function(card , reference){
+        var hits = [];
+        for(var i = 0; i < 5 ; i++ ){
+            hits.push(card.NUMEROS[reference.posX[i]][reference.posY[i]]);
+        }
+        return hits;
     }
 };

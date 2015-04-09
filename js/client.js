@@ -93,38 +93,41 @@ function hearmulticast(multicastPort){
        handleData(message);
     });
 }
-function checkAllTypesOfWinning( card, refrence ){
+function callBingo(cod ,card, hits){
+    var data = {
+        COD : cod,
+        IDCARTON : card.IDCARTON,
+        NUMEROS : card.NUMEROS,
+        ACIERTOS : hits
+    };
+
+    client.write(JSON.stringify(data));
+}
+function checkAllTypesOfWinning(card){
     var typeOfWin;
-
-    typeOfWin = utilities.checkBingoVertical(myCards[i].referenceMatrix);
-    //Vertical
+    var hits;
+    typeOfWin = utilities.checkBingoVertical(card.referenceMatrix);
     if(typeOfWin){
-
-    }else{
-
-        typeOfWin = utilities.checkBingoHorizontal(myCards[i].referenceMatrix);
-        //Horizontal
-        if(typeOfWin){
-
-        }else{
-            typeOfWin = utilities.checkBingoDiagonal(myCards[i].referenceMatrix);
-            //Diagonal
-            if(typeOfWin){
-
-            }else{
-
-                typeOfWin = utilities.checkBingoFull(myCards[i].referenceMatrix);
-                //Full
-                if (typeOfWin){
-
-                }else{
-
-                }
-
-            }
-        }
+        hits = utilities.getHits(card,typeOfWin);
+        callBingo(303,card,hits);
+        return;
     }
 
+    typeOfWin = utilities.checkBingoHorizontal(card.referenceMatrix);
+    if(typeOfWin){
+        hits = utilities.getHits(card,typeOfWin);
+        callBingo(304,card,hits);
+        return;
+    }
+
+    typeOfWin = utilities.checkBingoDiagonal(card.referenceMatrix);
+    if(typeOfWin){
+        hits = utilities.getHits(card,typeOfWin);
+        callBingo(305,card,hits);
+        return;
+    }
+
+    //missing bingo full
 
 
 }
@@ -143,14 +146,13 @@ function renderHitForAllCards(number){
         var cardID = utilities.checkHit(myCards[i],number);
         if (cardID !== ''){
             myCards[i].referenceMatrix = utilities.updateReferenceMatrix(myCards[i],number);
-
+            checkAllTypesOfWinning(myCards[i]);
             //Check all type of wins
             //console.log(utilities.checkBingoVertical(myCards[i].referenceMatrix));
             //console.log(utilities.checkBingoHorizontal(myCards[i].referenceMatrix));
             //console.log(utilities.checkBingoDiagonal(myCards[i].referenceMatrix));
             //console.log(utilities.checkBingoFull(myCards[i].referenceMatrix));
         }
-        console.log(cardID);
         renderHit(cardID,number);
     }
 
