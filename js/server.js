@@ -1,5 +1,6 @@
 var MD5 = require('MD5');
 var bingoCard = require('../js/bingoCard.js');
+var utilities = require('../js/bingoUtilities.js');
 
 var ip = global.infoGame.ip;
 var port = global.infoGame.PORT;
@@ -66,6 +67,12 @@ function announceRoom(ip , room){
             case 102:
                 responseRequestCards(data,sock);
                 break;
+            case 303:
+            case 304:
+            case 305:
+            case 306:
+                announceBingo(data, sock);
+                break;
             default:
                 console.log('Codigo erroneo de JSON');
                 break;
@@ -86,7 +93,8 @@ function announceRoom(ip , room){
             sleep(100);
 
             sock.write(JSON.stringify(data));
-            user.cardsID.push(card.cardID);
+            user.cards.push(card);
+
         }
 
         console.log(user);
@@ -113,7 +121,7 @@ function announceRoom(ip , room){
         users.push({
             playerName: json.CLIENTE,
             ip: sock.localAddress,
-            cardsID : []
+            cards : []
         });
 
     }
@@ -125,6 +133,66 @@ function announceRoom(ip , room){
             return data;
         }catch(err){
             console.log('Error al parsear el JSON  -' + err);
+        }
+
+    }
+    function announceBingo(data, sock){
+        message = {
+            COD: 302,
+            IDJUEGO : gameID
+        };
+        clearInterval(intervalMulticast);
+        sendMulticast(JSON.stringify(message));
+        var user = _.find(users,function(){
+                        return users.ip === data.localAddress;
+                    });
+        console.log(user);
+        var userCards = user.cards;
+
+        var card = _.find(userCards,function(userCards){
+                        return userCards.cardID === data.IDCARTON;
+                    });
+        console.log(card);
+        if(card){
+            var key = 'COD';
+            var checked = false;
+            message ={
+                COD : data.COD,
+                IDJUEGO: gameID,
+                CLIENTE : user.playerName,
+                TIPOBINGO: ''
+            };
+            data.referenceMatrix = [[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+            for(var i = 0; i < bingoNumbers.length ; i++){
+                    data.referenceMatrix = utilities.updateReferenceMatrix(data,bingoNumbers[i]);
+            }
+
+
+            if(data.COD === 303){
+                delete data[key];
+                checked = utilities.checkBingoVertical(data.referenceMatrix);
+                if(checked)
+                    message.TIPOBINGO = 'Bingo Vertical';
+
+            }
+
+            if(data.COD === 304){
+                delete data[key];
+                checked = utilities.checkBingoHorizontal(data.referenceMatrix);
+                if(checked)
+                    message.TIPOBINGO = 'Bingo Horizontal';
+
+            }
+            if(data.COD === 305){
+                delete data[key];
+                checked = utilities.checkBingoDiagonal(data.referenceMatrix);
+                if(checked)
+                    message.TIPOBINGO = 'Bingo Diagonal';
+
+            }
+
+            if (checked)
+                sendMulticast(JSON.stringify(message));
         }
 
     }

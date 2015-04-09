@@ -38,9 +38,22 @@ function handleData(data){
             console.log(data.NUMEROS);
             handleCards(data);
             break;
+        case 300:
+            console.log('Manejar Inicio de Juego');
+            break;
+        case 301:
+            console.log('Manejar fin de juego');
+            break;
         case 308:
             handleNumbers(data);
             break;
+        case 302:
+            console.log('Manejar Bingo Cantado');
+            break;
+        case 307:
+            console.log('Manejar Bingo Aceptado');
+            break;
+
         default:
             console.log('switch:' +data);
             break;
@@ -87,9 +100,8 @@ function hearmulticast(multicastPort){
     });
 
     socket.on('message',function(data,rinfo){
-
-       //console.log(data.toString());
        var message = parseJSON(data);
+       console.log(message);
        handleData(message);
     });
 }
@@ -146,12 +158,9 @@ function renderHitForAllCards(number){
         var cardID = utilities.checkHit(myCards[i],number);
         if (cardID !== ''){
             myCards[i].referenceMatrix = utilities.updateReferenceMatrix(myCards[i],number);
-            checkAllTypesOfWinning(myCards[i]);
             //Check all type of wins
-            //console.log(utilities.checkBingoVertical(myCards[i].referenceMatrix));
-            //console.log(utilities.checkBingoHorizontal(myCards[i].referenceMatrix));
-            //console.log(utilities.checkBingoDiagonal(myCards[i].referenceMatrix));
-            //console.log(utilities.checkBingoFull(myCards[i].referenceMatrix));
+            checkAllTypesOfWinning(myCards[i]);
+
         }
         renderHit(cardID,number);
     }
