@@ -1,4 +1,5 @@
 var os = require('os');
+var utilities = require('../js/bingoUtilities.js');
 
 var netInterfaces = os.networkInterfaces();
 var ip = network.getMyIp();
@@ -48,7 +49,9 @@ function handleData(data){
 function handleCards(json){
     var key = 'COD';
     delete data[key];
+    data.referenceMatrix = [[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]];
     myCards.push(data);
+    console.log(data);
     renderCard(json);
 
 }
@@ -73,18 +76,6 @@ function parseJSON(json){
     }
 }
 
-function checkHit(card, number){
-
-    for (var i = 0; i < 5 ; i++) {
-        for (var j = 0; j < 5 ; j++) {
-            if(card.NUMEROS[i][j] === number)
-                return card.IDCARTON;
-        }
-    }
-
-    return '';
-}
-
 function hearmulticast(multicastPort){
     var dgram = require('dgram');
     var socket = dgram.createSocket('udp4');
@@ -102,6 +93,41 @@ function hearmulticast(multicastPort){
        handleData(message);
     });
 }
+function checkAllTypesOfWinning( card, refrence ){
+    var typeOfWin;
+
+    typeOfWin = utilities.checkBingoVertical(myCards[i].referenceMatrix);
+    //Vertical
+    if(typeOfWin){
+
+    }else{
+
+        typeOfWin = utilities.checkBingoHorizontal(myCards[i].referenceMatrix);
+        //Horizontal
+        if(typeOfWin){
+
+        }else{
+            typeOfWin = utilities.checkBingoDiagonal(myCards[i].referenceMatrix);
+            //Diagonal
+            if(typeOfWin){
+
+            }else{
+
+                typeOfWin = utilities.checkBingoFull(myCards[i].referenceMatrix);
+                //Full
+                if (typeOfWin){
+
+                }else{
+
+                }
+
+            }
+        }
+    }
+
+
+
+}
 
 function renderCard(json){
     data= {
@@ -114,7 +140,16 @@ function renderCard(json){
 function renderHitForAllCards(number){
 
     for(var i = 0 ; i < myCards.length ; i++ ){
-        var cardID = checkHit(myCards[i],number);
+        var cardID = utilities.checkHit(myCards[i],number);
+        if (cardID !== ''){
+            myCards[i].referenceMatrix = utilities.updateReferenceMatrix(myCards[i],number);
+
+            //Check all type of wins
+            //console.log(utilities.checkBingoVertical(myCards[i].referenceMatrix));
+            //console.log(utilities.checkBingoHorizontal(myCards[i].referenceMatrix));
+            //console.log(utilities.checkBingoDiagonal(myCards[i].referenceMatrix));
+            //console.log(utilities.checkBingoFull(myCards[i].referenceMatrix));
+        }
         console.log(cardID);
         renderHit(cardID,number);
     }
