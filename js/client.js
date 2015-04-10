@@ -51,11 +51,7 @@ function handleData(data){
             toastr["info"]("","Un cliente ha cantado bingo");
             break;
         case 307:
-            toastr["info"]("Ganador : " +data.CLIENTE+ " con un" + data.TIPOBINGO,"El Servidor Acepto el BINGO");
-            break;
-
-        default:
-            console.log('switch:' +data);
+            toastr["info"]("Ganador : " +data.CLIENTE+ " con un " + data.TIPOBINGO,"El Servidor Acepto el BINGO");
             break;
     }
 }
@@ -76,17 +72,20 @@ function handleGameID(data){
 }
 
 function handleNumbers(data){
-    $('#numbers').append('<span class="badge btn-success">'+ data.NUMERO +'</span>');
-    renderHitForAllCards(data.NUMERO);
+    var number = data.NUMERO;
+    $('#numbers').append('<span class="badge label-success"><span>'+ number +'</span></span>');
+    renderHitForAllCards(number);
 }
 
-function parseJSON(json){
+function parseJSON( json ){
+
     try{
-        data = JSON.parse(json);
+        data = JSON.parse( json );
         return data;
-    }catch(e){
-        console.log(e);
+    }catch(err){
+        console.log('Error al parsear el JSON  -' + err);
     }
+
 }
 
 function hearmulticast(multicastPort){
@@ -99,10 +98,12 @@ function hearmulticast(multicastPort){
         socket.addMembership('239.1.2.3');
     });
 
-    socket.on('message',function(data,rinfo){
-       var message = parseJSON(data);
-       console.log(message);
-       handleData(message);
+    socket.on('message',function(message,rinfo){
+
+       var data = parseJSON(message);
+       console.log(data);
+       handleData(data);
+
     });
 }
 function callBingo(cod ,card, hits){

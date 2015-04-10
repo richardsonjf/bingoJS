@@ -4,6 +4,7 @@ var utilities = require('../js/bingoUtilities.js');
 
 var ip = global.infoGame.ip;
 var port = global.infoGame.PORT;
+var time = global.infoGame.TIME;
 var roomName = global.infoGame.roomName;
 var gameID = global.infoGame.gameID = MD5(ip);
 var users = [];
@@ -26,7 +27,7 @@ function announceRoom(ip , room){
 
     intervalToAnnounce = setInterval(function(){
                 network.serverUDP(message,port);
-    }, 5000);
+    }, 1000*time);
 
      var data = {
         type: 'alert-success',
@@ -149,12 +150,12 @@ function announceRoom(ip , room){
 
     }
     function announceBingo(data, sock){
-        message = {
+        var message = {
             COD: 302,
             IDJUEGO : gameID
         };
         clearInterval(intervalMulticast);
-        sendMulticast(JSON.stringify(message));
+        sendMulticast(message);
         var user = _.find(users,function(){
                         return users.ip === data.localAddress;
                     });
@@ -171,7 +172,7 @@ function announceRoom(ip , room){
             var key = 'COD';
             var checked = false;
             message ={
-                COD : data.COD,
+                COD : 307,
                 IDJUEGO: gameID,
                 CLIENTE : user.playerName,
                 TIPOBINGO: ''
@@ -207,7 +208,8 @@ function announceRoom(ip , room){
 
             if (checked){
                 toastr["success"]("Ha ganado:  " + message.CLIENTE + " con " + message.TIPOBINGO ,"Se ha aceptado el BINGO");
-                sendMulticast(JSON.stringify(message));
+                sleep(1000);
+                sendMulticast(message);
 
             }
         }
@@ -217,7 +219,7 @@ function announceRoom(ip , room){
 }());
 
 function callNumber(){
-
+    toastr["info"]("","Ha comenzado el juego");
     intervalMulticast = setInterval(function(){
 
 
@@ -231,13 +233,13 @@ function callNumber(){
         //Finalize Game
         if(bingoNumbers.length === 75){
             clearInterval(intervalMulticast);
-            sendMulticast(JSON.stringify({COD: 301, IDJUEGO : gameID}));
+            sendMulticast({COD: 301, IDJUEGO : gameID});
         }
 
         sendMulticast(data);
         renderNumberCalled(data.NUMERO);
-    }, 1000);
-    toastr["info"]("","Ha comenzado el juego");
+    }, 1000*time);
+
 }
 
 function generateUniqueNumber(){
@@ -276,7 +278,7 @@ function renderPlayerCardQuantity(md5PlayerIP, cardQuantity){
     console.log($('#'+md5PlayerIP).text(cardQuantity));
 }
 function renderNumberCalled(number){
-    $('#numbersCalled').append('<span class="badge label-danger">'+ number +'</span>');
+    $('#numbersCalled').append('<span class="badge label-primary"><span>'+ number +'</span></span>');
 }
 
 function removePlayer(data){
