@@ -35,21 +35,25 @@ $('.btn-primary').on('click',function(ev){
     ev.preventDefault();
     var element = $("input[name='rooms']:checked");
     var address = element.val();
-
-    if(typeof(address) != 'undefined'){
+    var userName = $('#userName').val();
+    console.log(ev);
+    if(typeof(address) != 'undefined' && userName !== ''){
         global.infoGame.hostAddress = address;
-        global.infoGame.userName = $('#userName').val();
+        global.infoGame.userName = userName;
         global.infoGame.roomName = element.attr('data-roomName');
         clientUDP.close();
         window.location.href = '../app/clientGame.html';
     }else{
-        console.log('No se ha seleccionado ninguna Sala');
+        if( userName === '')
+            toastr["error"]("El campo nombre de usuario esta vacio","Nombre Invalido");
+        else
+            toastr["error"]("No se ha selecionado ninguna sala a la cual unirse","Error de Sala");
     }
 
 
 });
 
-$('#userName').change(function(){
+$('#userName').change(function(ev){
     $('.special-button').addClass('move-button');
 });
 

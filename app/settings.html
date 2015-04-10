@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <!--should be added bootstrap local -->
+    <link rel="stylesheet" href="../css/roboto.min.css">
+    <link rel="stylesheet" href="../css/material-fullpalette.min.css">
+    <link rel="stylesheet" href="../css/ripples.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../js/vendor/jquery-1.11.2.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="../js/vendor/underscore.min.js"></script>
+    <script src="../js/vendor/ripples.min.js"></script>
+    <script src="../js/vendor/material.min.js"></script>
+    <title>Ajustes Bingo</title>
+</head>
+<body>
+ <header>
+        <nav class="navbar navbar-default">
+            <h1>Ajustes Bingo</h1>
+        </nav>
+</header>
+    <section class="col-md-12">
+        <div class="well bs-component">
+            <form class="form-horizontal">
+                <fieldset>
+                    <legend>Ajustes de Red</legend>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-lg-2 control-label">Puerto</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="port" placeholder="Puerto" value="10022">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-lg-2 control-label">Tiempo de Envio entre cada Mensaje</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="time" placeholder="Tiempo" value="5">
+                        </div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primary"><strong> Guardar </strong> </button>
+            </form>
+        </div>
+    </section>
+<script>
+    $.material.init();
+    $('#port').val(global.infoGame.PORT);
+    $('#time').val(global.infoGame.TIME);
+    $('.form-horizontal').on('submit',function(ev){
+        ev.preventDefault();
+        global.infoGame.PORT = $('#port').val();
+        global.infoGame.TIME = $('#time').val();
+        window.location.href = 'index.html';
+    });
+</script>
+</body>
+</html>

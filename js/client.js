@@ -39,19 +39,19 @@ function handleData(data){
             handleCards(data);
             break;
         case 300:
-            console.log('Manejar Inicio de Juego');
+            toastr["success"]("","Ha comenzado el juego");
             break;
         case 301:
-            console.log('Manejar fin de juego');
+            toastr["info"]("","Ha finalizado el juego");
             break;
         case 308:
             handleNumbers(data);
             break;
         case 302:
-            console.log('Manejar Bingo Cantado');
+            toastr["info"]("","Un cliente ha cantado bingo");
             break;
         case 307:
-            console.log('Manejar Bingo Aceptado');
+            toastr["info"]("Ganador : " +data.CLIENTE+ " con un" + data.TIPOBINGO,"El Servidor Acepto el BINGO");
             break;
 
         default:
@@ -112,7 +112,7 @@ function callBingo(cod ,card, hits){
         NUMEROS : card.NUMEROS,
         ACIERTOS : hits
     };
-
+    toastr["success"]("Felicidades has logrado un bingo","Has Hecho BINGO");
     client.write(JSON.stringify(data));
 }
 function checkAllTypesOfWinning(card){

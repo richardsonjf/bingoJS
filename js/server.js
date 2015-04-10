@@ -12,7 +12,6 @@ var intervalToAnnounce;
 var intervalMulticast;
 var sendMulticast;
 var templates = {
-    infoMessage : _.template($('#info-template').html()),
     player : _.template($('#player-template').html())
 };
 
@@ -34,7 +33,9 @@ function announceRoom(ip , room){
         message: 'El servidor se esta Anunciando.',
         description: 'En el puerto: ' + port
     };
-    renderInfoMessage(data);
+
+    //do toastr
+    toastr["success"]("Se esta anunciando en el puerto: " + port,"El servidor esta Anunciando.");
 }
 
 (function startServer(){
@@ -50,6 +51,15 @@ function announceRoom(ip , room){
 
         client.on('end',function(){
             console.log('client disconected');
+            var user = _.find(users,function(users){
+                        return typeof(users.sock.localAddress) === 'undefined';
+                    });
+            removePlayer(user);
+            //check if an error occurs
+            delete user.sock;
+            var index = users.indexOf(user);
+            users.splice(index, 1);
+
         });
 
     });
@@ -90,7 +100,7 @@ function announceRoom(ip , room){
                 IDCARTON : card.cardID,
                 NUMEROS : card.card
             };
-            sleep(100);
+            sleep(200);
 
             sock.write(JSON.stringify(data));
             user.cards.push(card);
@@ -121,8 +131,10 @@ function announceRoom(ip , room){
         users.push({
             playerName: json.CLIENTE,
             ip: sock.localAddress,
+            sock: sock,
             cards : []
         });
+
 
     }
 
@@ -146,6 +158,8 @@ function announceRoom(ip , room){
         var user = _.find(users,function(){
                         return users.ip === data.localAddress;
                     });
+        //do toastr
+        toastr["info"]("El cliente que lo canto es:  " + user.playerName,"Se ha cantado BINGO");
         console.log(user);
         var userCards = user.cards;
 
@@ -191,8 +205,11 @@ function announceRoom(ip , room){
 
             }
 
-            if (checked)
+            if (checked){
+                toastr["success"]("Ha ganado:  " + message.CLIENTE + " con " + message.TIPOBINGO ,"Se ha aceptado el BINGO");
                 sendMulticast(JSON.stringify(message));
+
+            }
         }
 
     }
@@ -212,12 +229,15 @@ function callNumber(){
 
         };
         //Finalize Game
-        if(bingoNumbers.length === 75)
+        if(bingoNumbers.length === 75){
             clearInterval(intervalMulticast);
+            sendMulticast(JSON.stringify({COD: 301, IDJUEGO : gameID}));
+        }
 
         sendMulticast(data);
         renderNumberCalled(data.NUMERO);
     }, 1000);
+    toastr["info"]("","Ha comenzado el juego");
 }
 
 function generateUniqueNumber(){
@@ -246,9 +266,6 @@ function getIpFormat(ip){
     return parts[1];
 }
 
-function renderInfoMessage(data){
-    $('#information').append(templates.infoMessage(data));
-}
 
 function renderPlayer(data){
     $('#players').append(templates.player(data));
@@ -260,6 +277,10 @@ function renderPlayerCardQuantity(md5PlayerIP, cardQuantity){
 }
 function renderNumberCalled(number){
     $('#numbersCalled').append('<span class="badge label-danger">'+ number +'</span>');
+}
+
+function removePlayer(data){
+    $('#'+data.playerName+'-'+ MD5(data.ip)).remove();
 }
 
 
