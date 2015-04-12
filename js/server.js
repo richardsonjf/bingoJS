@@ -208,6 +208,9 @@ function announceRoom(ip , room){
                 toastr["success"]("Ha ganado:  " + message.CLIENTE + " con " + message.TIPOBINGO ,"Se ha aceptado el BINGO");
                 sleep(1000);
                 sendMulticast(message);
+                sleep(1000);
+                sendMulticast({COD : 301,IDJUEGO: gameID});
+                toastr["info"]("","Ha finalizado el juego");
 
             }
         }
