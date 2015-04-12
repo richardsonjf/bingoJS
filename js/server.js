@@ -16,6 +16,12 @@ var templates = {
     player : _.template($('#player-template').html())
 };
 
+users.push({
+            playerName: 'Prueba',
+            ip: 'fff:ff:192.154.2.1',
+            sock: null,
+            cards : []
+        });
 announceRoom(ip,roomName);
 
 function announceRoom(ip , room){
@@ -91,9 +97,8 @@ function announceRoom(ip , room){
     }
 
     function responseRequestCards(json, sock){
-        var user = _.find(users,function(){
-                        return users.ip === json.localAddress;
-                    });
+        var user = findUser(sock.remoteAddress);
+
         for (var i = 0; i < json.NROCARTONES; i++) {
             var card = bingoCard.generateBingoCard();
             data ={
@@ -109,6 +114,7 @@ function announceRoom(ip , room){
         }
 
         console.log(user);
+
         renderPlayerCardQuantity(MD5(user.ip),json.NROCARTONES);
     }
 
@@ -116,8 +122,8 @@ function announceRoom(ip , room){
 
         data = {
             playerName : json.CLIENTE,
-            ip : getIpFormat(sock.localAddress),
-            md5ip: MD5(sock.localAddress)
+            ip : sock.remoteAddress,
+            md5ip: MD5(sock.remoteAddress)
         };
 
         console.log(sock.remoteAddress);
@@ -131,7 +137,7 @@ function announceRoom(ip , room){
         sock.write(JSON.stringify(response));
         users.push({
             playerName: json.CLIENTE,
-            ip: sock.localAddress,
+            ip: sock.remoteAddress,
             sock: sock,
             cards : []
         });
@@ -156,17 +162,13 @@ function announceRoom(ip , room){
         };
         clearInterval(intervalMulticast);
         sendMulticast(message);
-        var user = _.find(users,function(){
-                        return users.ip === data.localAddress;
-                    });
+        var user = findUser(sock.remoteAddress);
         //do toastr
         toastr["info"]("El cliente que lo canto es:  " + user.playerName,"Se ha cantado BINGO");
         console.log(user);
         var userCards = user.cards;
 
-        var card = _.find(userCards,function(userCards){
-                        return userCards.cardID === data.IDCARTON;
-                    });
+        var card = _.findWhere(userCards,{cardID : data.IDCARTON});
         console.log(card);
         if(card){
             var key = 'COD';
@@ -207,7 +209,7 @@ function announceRoom(ip , room){
             }
 
             if (checked){
-                toastr["success"]("Ha ganado:  " + message.CLIENTE + " con " + message.TIPOBINGO ,"Se ha aceptado el BINGO");
+                toastr["success"]("Ha ganado:  " + message.IDCARTON + " con " + message.TIPOBINGO ,"Se ha aceptado el BINGO");
                 sleep(1000);
                 sendMulticast(message);
 
@@ -217,6 +219,11 @@ function announceRoom(ip , room){
     }
 
 }());
+
+function findUser( ip ){
+    var user = _.findWhere(users,{ip: ip});
+    return user;
+}
 
 function callNumber(){
     toastr["info"]("","Ha comenzado el juego");
@@ -295,6 +302,7 @@ $('#startGame').on('click',function(ev){
     clearInterval(intervalToAnnounce);
     sendMulticast({COD:300, IDJUEGO:gameID});
     ev.currentTarget.remove();
+    sleep(100);
     callNumber();
 
 

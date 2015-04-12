@@ -1,6 +1,6 @@
 {
   "name": "BingoJS",
-  "single-instance" : false,
+  "single-instance": false,
   "main": "/app/index.html",
   "window": {
     "width": 1100,
@@ -8,13 +8,15 @@
     "toolbar": true
   },
   "dependencies": {
+    "MD5": "^1.2.1",
+    "ip": "^0.3.2",
     "underscore": "^1.8.2"
   },
-  "version" : "0.0.1",
+  "version": "0.0.1",
   "description": "Bingo Protocol",
   "repository": {
     "type": "git",
     "url": "git://github.com/jgroac/bingoJS.git"
   },
-  "author": "José Roa"  
+  "author": "José Roa"
 }

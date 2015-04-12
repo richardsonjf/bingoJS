@@ -2,17 +2,9 @@
 var network = {
     net : require('net'),
     dgram: require('dgram'),
-    os: require('os'),
+    ip: require('ip'),
     getMyIp : function(){
-        var netInterfaces = this.os.networkInterfaces();
-        var ip;
-
-        if(typeof(netInterfaces.wlan0)  === 'undefined')
-            ip = netInterfaces.eth0[0].address;
-        else
-            ip = netInterfaces.wlan0[0].address;
-
-        return ip;
+        return this.ip.address();
     },
     serverUDP : function(json,port){
         var dgram = this.dgram;
@@ -35,11 +27,11 @@ var network = {
         var dgram = this.dgram;
         var client = dgram.createSocket('udp4');
         var PORT = port;
-        var HOST = '255.255.255.255';
+        /*var HOST = '255.255.255.255';*/
+        var HOST = '0.0.0.0';
         client.on('listening',function(){
             console.log("Server on listening:"+ HOST + ' Port:' + PORT);
         });
-
 
 
         client.bind(PORT,HOST);

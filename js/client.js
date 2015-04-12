@@ -22,7 +22,8 @@ client.on('data',function(data){
 function requestConnection(){
     data = {
         COD : 100,
-        CLIENTE : global.infoGame.userName
+        CLIENTE : global.infoGame.userName,
+        IP: ip
     };
 
     client.write(JSON.stringify(data));
@@ -95,7 +96,7 @@ function hearmulticast(multicastPort){
     socket.bind(PORT,'0.0.0.0',function(){
         socket.setBroadcast(true);
         socket.setTTL(1);
-        socket.addMembership('239.1.2.3');
+        socket.addMembership('239.1.2.3',ip);
     });
 
     socket.on('message',function(message,rinfo){
@@ -116,6 +117,7 @@ function callBingo(cod ,card, hits){
     toastr["success"]("Felicidades has logrado un bingo","Has Hecho BINGO");
     client.write(JSON.stringify(data));
 }
+
 function checkAllTypesOfWinning(card){
     var typeOfWin;
     var hits;

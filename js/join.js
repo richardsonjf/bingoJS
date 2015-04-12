@@ -1,8 +1,6 @@
-var clientUDP = network.clientUDP(10022);
+var clientUDP = network.clientUDP(global.infoGame.PORT);
 var template = _.template($('#room-template').html());
 var rooms = [];
-
-//need implement the client ip (userip)
 
 clientUDP.on('message',function(message,remote){
         console.log('message receive: ' + message + 'remote to: ' +remote.address);
