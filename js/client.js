@@ -1,7 +1,5 @@
-var os = require('os');
 var utilities = require('../js/bingoUtilities.js');
 
-var netInterfaces = os.networkInterfaces();
 var ip = network.getMyIp();
 var port = global.infoGame.PORT;
 var client = network.clientTCP(port,global.infoGame.hostAddress);
@@ -62,7 +60,7 @@ function handleCards(json){
     data.referenceMatrix = [[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]];
     myCards.push(data);
     console.log(data);
-    renderCard(json);
+    render.Card(json);
 
 }
 
@@ -107,6 +105,7 @@ function hearmulticast(multicastPort){
 
     });
 }
+
 function callBingo(cod ,card, hits){
     var data = {
         COD : cod,
@@ -143,17 +142,8 @@ function checkAllTypesOfWinning(card){
     }
 
     //missing bingo full
-
-
 }
 
-function renderCard(json){
-    data= {
-        cardID : json.IDCARTON,
-        card : json.NUMEROS
-    };
-    $('#cards-container').prepend(templates.card(data));
-}
 
 function renderHitForAllCards(number){
 
@@ -165,13 +155,9 @@ function renderHitForAllCards(number){
             checkAllTypesOfWinning(myCards[i]);
 
         }
-        renderHit(cardID,number);
+        render.Hit(cardID,number);
     }
 
-}
-
-function renderHit(cardID, number){
-    $('#' + cardID).find('#' + number).addClass('success');
 }
 
 //Events

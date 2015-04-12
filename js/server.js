@@ -12,6 +12,8 @@ var bingoNumbers = [];
 var intervalToAnnounce;
 var intervalMulticast;
 var sendMulticast;
+
+
 var templates = {
     player : _.template($('#player-template').html())
 };
@@ -22,6 +24,7 @@ users.push({
             sock: null,
             cards : []
         });
+
 announceRoom(ip,roomName);
 
 function announceRoom(ip , room){
@@ -41,7 +44,7 @@ function announceRoom(ip , room){
         description: 'En el puerto: ' + port
     };
 
-    //do toastr
+
     toastr["success"]("Se esta anunciando en el puerto: " + port,"El servidor esta Anunciando.");
 }
 
@@ -115,7 +118,7 @@ function announceRoom(ip , room){
 
         console.log(user);
 
-        renderPlayerCardQuantity(MD5(user.ip),json.NROCARTONES);
+        render.PlayerCardQuantity(MD5(user.ip),json.NROCARTONES);
     }
 
     function responseConnection( json, sock ){
@@ -127,7 +130,7 @@ function announceRoom(ip , room){
         };
 
         console.log(sock.remoteAddress);
-        renderPlayer(data);
+        render.Player(data);
 
         var response ={
             COD : 101,
@@ -209,7 +212,7 @@ function announceRoom(ip , room){
             }
 
             if (checked){
-                toastr["success"]("Ha ganado:  " + message.IDCARTON + " con " + message.TIPOBINGO ,"Se ha aceptado el BINGO");
+                toastr["success"]("Ha ganado:  " + message.CLIENTE + " con " + message.TIPOBINGO ,"Se ha aceptado el BINGO");
                 sleep(1000);
                 sendMulticast(message);
 
@@ -244,7 +247,7 @@ function callNumber(){
         }
 
         sendMulticast(data);
-        renderNumberCalled(data.NUMERO);
+        render.NumberCalled(data.NUMERO);
     }, 1000*time);
 
 }
@@ -273,19 +276,6 @@ function sleep(milliseconds) {
 function getIpFormat(ip){
     var parts = ip.split('f:');
     return parts[1];
-}
-
-
-function renderPlayer(data){
-    $('#players').append(templates.player(data));
-}
-
-function renderPlayerCardQuantity(md5PlayerIP, cardQuantity){
-    console.log('rendered md5: ' + md5PlayerIP + '  '+ cardQuantity);
-    console.log($('#'+md5PlayerIP).text(cardQuantity));
-}
-function renderNumberCalled(number){
-    $('#numbersCalled').append('<span class="badge label-primary"><span>'+ number +'</span></span>');
 }
 
 function removePlayer(data){
