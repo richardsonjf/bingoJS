@@ -18,13 +18,6 @@ var templates = {
     player : _.template($('#player-template').html())
 };
 
-users.push({
-            playerName: 'Prueba',
-            ip: 'fff:ff:192.154.2.1',
-            sock: null,
-            cards : []
-        });
-
 announceRoom(ip,roomName);
 
 function announceRoom(ip , room){

@@ -4,6 +4,7 @@ var ip = network.getMyIp();
 var port = global.infoGame.PORT;
 var client = network.clientTCP(port,global.infoGame.hostAddress);
 var myCards = [];
+var gameID;
 var templates = {
     card : _.template($('#card-template').html())
 };
@@ -65,15 +66,20 @@ function handleCards(json){
 }
 
 function handleGameID(data){
-    global.infoGame.gameID = data.IDJUEGO;
+    gameID = data.IDJUEGO;
     console.log('Se ha unido al juego con id: ' + data.IDJUEGO);
-    hearmulticast(5554);
+    hearMulticast(5554);
 }
 
 function handleNumbers(data){
     var number = data.NUMERO;
-    $('#numbers').append('<span class="badge label-success"><span>'+ number +'</span></span>');
-    renderHitForAllCards(number);
+
+    //only if it's the same game
+    if(gameID == data.IDJUEGO){
+        render.NumberCalled(number);
+        renderHitForAllCards(number);
+    }
+
 }
 
 function parseJSON( json ){
@@ -87,7 +93,7 @@ function parseJSON( json ){
 
 }
 
-function hearmulticast(multicastPort){
+function hearMulticast(multicastPort){
     var dgram = require('dgram');
     var socket = dgram.createSocket('udp4');
     var PORT = multicastPort;

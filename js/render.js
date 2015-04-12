@@ -10,7 +10,7 @@ var render = {
     },
 
     NumberCalled : function (number){
-        $('#numbersCalled').append('<span class="badge label-primary"><span>'+ number +'</span></span>');
+        $('#numbersCalled').append('<span class="badge label-success"><span>'+ number +'</span></span>');
     },
 
     Hit : function (cardID, number){
